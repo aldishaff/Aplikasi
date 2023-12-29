@@ -55,7 +55,7 @@ public class LibraryApp extends Application {
     Background background = new Background(backgroundImg);
 
         // Layout
-        VBox welcomeLayout = new VBox(20);
+        VBox welcomeLayout = new VBox(15);
         welcomeLayout.setAlignment(Pos.CENTER);
         welcomeLayout.setBackground(background);
         welcomeLayout.setPadding(new Insets(20));
@@ -128,7 +128,6 @@ public class LibraryApp extends Application {
     }
 
     private void showMainScreen(Stage primaryStage) {
-       
         // Initialize GUI for books
         tableView.setEditable(true);
         TableColumn<Book, String> titleColumn = new TableColumn<>("Judul");
@@ -311,15 +310,6 @@ public class LibraryApp extends Application {
 
         // Show the stage
         primaryStage.show();
-    }
-    private Background createGradientBackground() {
-        Stop[] stops = new Stop[]{
-                new Stop(0, Color.web("#6495ED")),
-                new Stop(1, Color.web("#1E90FF"))
-        };
-        LinearGradient gradient = new LinearGradient(0, 0, 1, 1, true, CycleMethod.NO_CYCLE, stops);
-        BackgroundFill backgroundFill = new BackgroundFill(gradient, CornerRadii.EMPTY, Insets.EMPTY);
-        return new Background(backgroundFill);
     }
 
     private void saveToTxtFile(String content, String fileName) {
