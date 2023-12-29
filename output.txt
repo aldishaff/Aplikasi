@@ -4,3 +4,9 @@ Mahasiswa: John Doe
 NIM Mahasiswa: 123456
 Program Studi: Computer Science
 
+Informasi Peminjaman:
+Judul Buku: indonesi
+Mahasiswa: aldi
+NIM Mahasiswa: 385
+Program Studi: IT
+

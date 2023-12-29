@@ -41,14 +41,18 @@ public class LibraryApp extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("SISTEM MANAJEMEN PERPUSTAKAAN");
 
-        // Gradient Background
-        Stop[] stops = new Stop[]{
-                new Stop(0, Color.web("#191970")),
-                new Stop(1, Color.web("#FF1493"))
-        };
-        LinearGradient gradient = new LinearGradient(0, 0, 1, 1, true, CycleMethod.NO_CYCLE, stops);
-        BackgroundFill backgroundFill = new BackgroundFill(gradient, CornerRadii.EMPTY, Insets.EMPTY);
-        Background background = new Background(backgroundFill);
+        // Background Image
+        Image backgroundImage = new Image("D:\\Aldy firman s\\pexels-shvets-production-7516544.jpg"); // Replace with your image file path
+        BackgroundSize backgroundSize = new BackgroundSize(100, 100, true, true, true, false);
+        BackgroundImage backgroundImg = new BackgroundImage(
+            backgroundImage,
+            BackgroundRepeat.REPEAT,
+            BackgroundRepeat.REPEAT,
+            BackgroundPosition.DEFAULT,
+            backgroundSize
+    );
+
+    Background background = new Background(backgroundImg);
 
         // Layout
         VBox welcomeLayout = new VBox(20);
@@ -57,24 +61,13 @@ public class LibraryApp extends Application {
         welcomeLayout.setPadding(new Insets(20));
 
         // Title
-        Label titleLabel = new Label("SELAMAT DATANG");
-        titleLabel.setFont(Font.font("Rockwell Extra Bold", FontWeight.BOLD, 40));
+        Label titleLabel = new Label("Selamat Datang");
+        titleLabel.setFont(Font.font("Segoe UI", FontWeight.BOLD, 30));
         titleLabel.setTextFill(Color.WHITE);
-
-        // Animation for changing text color
-        Timeline timeline = new Timeline(
-                new KeyFrame(Duration.ZERO, new KeyValue(titleLabel.textFillProperty(), Color.GOLD)),
-                new KeyFrame(Duration.seconds(1), new KeyValue(titleLabel.textFillProperty(), Color.PINK)),
-                new KeyFrame(Duration.seconds(1.6), new KeyValue(titleLabel.textFillProperty(), Color.AQUA))
-                // Add more KeyFrames for additional color changes
-        );
-        timeline.setAutoReverse(true);
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.play();
 
         // Subtitle
         Label subtitleLabel = new Label("Aplikasi Sistem Manajemen Perpustakaan Kami");
-        subtitleLabel.setFont(Font.font("Cambria", FontWeight.BOLD, 25));
+        subtitleLabel.setFont(Font.font("Segoe UI", FontWeight.BOLD, 20));
         subtitleLabel.setTextFill(Color.WHITE);
 
         // Continue Button
@@ -102,9 +95,34 @@ public class LibraryApp extends Application {
         ));
         continueButton.setOnAction(e -> showMainScreen(primaryStage));
 
-        welcomeLayout.getChildren().addAll(titleLabel, subtitleLabel, continueButton);
+        // Exit Button
+        Button exitButton = new Button("Keluar dari Aplikasi");
+        exitButton.setStyle(
+            "-fx-background-color: linear-gradient(#FF6347, #D32F2F); " +
+                    "-fx-background-radius: 20; " +
+                    "-fx-background-insets: 0; " +
+                    "-fx-text-fill: white; " +
+                    "-fx-font-size: 14px;"
+    );
+        exitButton.setOnMouseEntered(e -> exitButton.setStyle(
+            "-fx-background-color: linear-gradient(#FFA07A, #FF6347); " +
+                    "-fx-background-radius: 20; " +
+                    "-fx-background-insets: 0; " +
+                    "-fx-text-fill: white; " +
+                    "-fx-font-size: 14.12px;"
+    ));
+        exitButton.setOnMouseExited(e -> exitButton.setStyle(
+            "-fx-background-color: linear-gradient(#FF6347, #D32F2F); " +
+                    "-fx-background-radius: 20; " +
+                    "-fx-background-insets: 0; " +
+                    "-fx-text-fill: white; " +
+                    "-fx-font-size: 14px;"
+    ));
+        exitButton.setOnAction(e -> primaryStage.close());
 
-        Scene welcomeScene = new Scene(welcomeLayout, 600, 400);
+        welcomeLayout.getChildren().addAll(titleLabel, subtitleLabel, continueButton, exitButton);
+
+        Scene welcomeScene = new Scene(welcomeLayout, 800, 500);
         primaryStage.setScene(welcomeScene);
         primaryStage.show();
     }
@@ -142,11 +160,11 @@ public class LibraryApp extends Application {
         borrowerTableView.getColumns().addAll(nameColumn, nimColumn, prodiColumn);
 
         // Add some initial books
-        bookList.add(new Book("To Kill a Mockingbird", "Harper Lee", true));
-        bookList.add(new Book("1984", "George Orwell", false));
+        bookList.add(new Book("Antares", "Rweinda", true));
+        bookList.add(new Book("172 Days", "Nadzira Shafa", false));
 
-        borrowerList.add(new Borrower("John Doe", "123456", "Computer Science"));
-        borrowerList.add(new Borrower("Jane Smith", "789012", "Electrical Engineering"));
+        borrowerList.add(new Borrower("Aldi Firman", "2022-385", "IT"));
+        borrowerList.add(new Borrower("Larasati Khadijah", "2022-410", "IT"));
 
         tableView.getItems().addAll(bookList);
         borrowerTableView.getItems().addAll(borrowerList);
@@ -165,7 +183,6 @@ public class LibraryApp extends Application {
                 Book newBook = new Book(title, author, true);
                 bookList.add(newBook);
                 tableView.getItems().add(newBook);
-                //saveToFile();
                 titleInput.clear();
                 authorInput.clear();
             } else {
@@ -181,7 +198,6 @@ public class LibraryApp extends Application {
                 selectedBook.setAvailable(false);
                 selectedBook.setBorrower(selectedBorrower);
                 tableView.refresh();
-                //saveToFile();
 
                 //menampilkan popup
                 showInfoPopup("Buku berhasil dipinjam",
@@ -196,7 +212,7 @@ public class LibraryApp extends Application {
                                 "\nMahasiswa: " + selectedBorrower.getName() +
                                 "\nNIM Mahasiswa: " + selectedBorrower.getNim() +
                                 "\nProgram Studi: " + selectedBorrower.getProdi(),
-                        "output.txt");
+                        "DataPeminjaman.txt");
             } else {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Buku Tidak Tersedia");
@@ -227,13 +243,6 @@ public class LibraryApp extends Application {
                         "-fx-font-size: 14px;"
         ));
 
-        Button resetBooksButton = new Button("Reset");
-        resetBooksButton.setOnAction(e -> {
-            bookList.clear();
-            tableView.getItems().clear();
-            // saveToFile();
-        });
-
         // Create GUI components for borrowers
         TextField nameInput = new TextField();
         nameInput.setPromptText("Name");
@@ -254,7 +263,6 @@ public class LibraryApp extends Application {
                 Borrower newBorrower = new Borrower(name, nim, prodi);
                 borrowerList.add(newBorrower);
                 borrowerTableView.getItems().add(newBorrower);
-                //saveToFile();
                 nameInput.clear();
                 nimInput.clear();
                 prodiInput.clear();
@@ -267,13 +275,12 @@ public class LibraryApp extends Application {
         resetBorrowersButton.setOnAction(e -> {
             borrowerList.clear();
             borrowerTableView.getItems().clear();
-            // saveToFile();
         });
 
-        // Set up the layout
+        // Mengatur layout
         VBox bookLayout = new VBox(10);
         bookLayout.setPadding(new Insets(10, 10, 10, 10));
-        bookLayout.getChildren().addAll(tableView, titleInput, authorInput, addButton, resetBooksButton, borrowButton);
+        bookLayout.getChildren().addAll(tableView, titleInput, authorInput, addButton, borrowButton);
 
         VBox borrowerLayout = new VBox(10);
         borrowerLayout.setPadding(new Insets(10, 10, 10, 10));
@@ -281,6 +288,21 @@ public class LibraryApp extends Application {
 
         HBox mainLayout = new HBox(20);
         mainLayout.setAlignment(Pos.CENTER);
+        
+        // Background Image
+        Image backgroundImage = new Image("D:\\Aldy firman s\\pexels-shvets-production-7516544.jpg"); // Replace with your image file path
+        BackgroundSize backgroundSize = new BackgroundSize(100, 100, true, true, true, false);
+        BackgroundImage backgroundImg = new BackgroundImage(
+                backgroundImage,
+                BackgroundRepeat.REPEAT,
+                BackgroundRepeat.REPEAT,
+                BackgroundPosition.DEFAULT,
+                backgroundSize
+        );
+
+        Background background = new Background(backgroundImg);
+        mainLayout.setBackground(background);
+
         mainLayout.getChildren().addAll(bookLayout, borrowerLayout);
 
         // Set up the scene
@@ -290,10 +312,18 @@ public class LibraryApp extends Application {
         // Show the stage
         primaryStage.show();
     }
+    private Background createGradientBackground() {
+        Stop[] stops = new Stop[]{
+                new Stop(0, Color.web("#6495ED")),
+                new Stop(1, Color.web("#1E90FF"))
+        };
+        LinearGradient gradient = new LinearGradient(0, 0, 1, 1, true, CycleMethod.NO_CYCLE, stops);
+        BackgroundFill backgroundFill = new BackgroundFill(gradient, CornerRadii.EMPTY, Insets.EMPTY);
+        return new Background(backgroundFill);
+    }
 
     private void saveToTxtFile(String content, String fileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true))) {
-            //writer.write(content + "\n\n");
 
             // Menambahkan informasi peminjaman ke dalam file
             writer.write("Informasi Peminjaman:\n");
